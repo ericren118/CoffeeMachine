@@ -82,6 +82,7 @@ def check_resources(drink, current_resources):
 
 
 def make_coffee(ordered_drink, current_resources):
+    """Reduce resources and update profit"""
     drink = MENU[ordered_drink]["ingredients"]
     current_resources["water"] -= drink["water"]
     current_resources["coffee"] -= drink["coffee"]
