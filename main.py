@@ -1,19 +1,3 @@
-# # This is a sample Python script.
-#
-# # Press Shift+F10 to execute it or replace it with your code.
-# # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-#
-#
-# def print_hi(name):
-#     # Use a breakpoint in the code line below to debug your script.
-#     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-#
-#
-# # Press the green button in the gutter to run the script.
-# if __name__ == '__main__':
-#     print_hi('PyCharm')
-#
-# # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 MENU = {
     "expresso": {
         "ingredients": {
@@ -55,8 +39,8 @@ resources = {
 
 def print_report(current_resources, current_profit):
     """Check the Coffee machine status"""
-    print(f'Coffee Machine status:\n Water: {current_resources["water"]}ml \n Mike: {current_resources["milk"]}ml \n '
-          f'Coffee: {current_resources["coffee"]} \n Money: ${current_profit}')
+    print(f'Coffee Machine status:\n Water: {current_resources["water"]}ml \n Milk: {current_resources["milk"]}ml \n '
+          f'Coffee: {current_resources["coffee"]}g \n Money: ${"%.2f" % round(current_profit, 2)}')
 
 
 def check_resources(drink, current_resources):
@@ -83,19 +67,19 @@ def check_resources(drink, current_resources):
 
 def make_coffee(ordered_drink, current_resources):
     """Reduce resources and update profit"""
-    drink = MENU[ordered_drink]["ingredients"]
-    current_resources["water"] -= drink["water"]
-    current_resources["coffee"] -= drink["coffee"]
-    if ordered_drink != "expresso":
-        current_resources["milk"] -= drink["milk"]
+    ingredients = MENU[ordered_drink]["ingredients"]
+    for ingredient in ingredients:
+        current_resources[ingredient] -= ingredients[ingredient]
+
     print("Here is your ☕. Enjoy!")
 
 
 def payment(drink, current_profit):
-    quarter_num = float(input("How many quarters? "))
-    dime_num = float(input("How many dimes? "))
-    nickle_num = float(input("How many nickles? "))
-    pennie_num = float(input("How many pennies? "))
+    """return boolean value for payment status and current profit"""
+    quarter_num = int(input("How many quarters? "))
+    dime_num = int(input("How many dimes? "))
+    nickle_num = int(input("How many nickles? "))
+    pennie_num = int(input("How many pennies? "))
 
     total_payment = QUARTERS * quarter_num + DIMES * dime_num + NICKLE * nickle_num + PENNIE * pennie_num
     drink_price = MENU[drink]["cost"]
@@ -107,7 +91,7 @@ def payment(drink, current_profit):
         return payment_successful, current_profit
     else:
         if total_payment > drink_price:
-            change = total_payment - drink_price
+            change = '{:.2f}'.format(round(total_payment - drink_price, 2))
             print(f"Here is ${change} dollars in change.")
         current_profit += drink_price
         payment_successful = True
