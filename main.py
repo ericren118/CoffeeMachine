@@ -90,22 +90,6 @@ def make_coffee(ordered_drink, current_resources):
     print("Here is your ☕. Enjoy!")
 
 
-def start_coffee_machine():
-    machine_on = True
-
-    while machine_on:
-        drink = input("What would you like? expresso/latte/cappuccino: ").lower()
-        if drink == "report":
-            print_report(resources, profit)
-        elif drink == "off":
-            print("Turning off...")
-            machine_on = False
-        else:
-            if check_resources(drink, resources):
-                if payment(drink, profit):
-                    make_coffee(drink, resources)
-
-
 def payment(drink, current_profit):
     quarter_num = float(input("How many quarters? "))
     dime_num = float(input("How many dimes? "))
@@ -119,15 +103,32 @@ def payment(drink, current_profit):
         print(f"Sorry, that's not enough money for a ${drink_price} {drink} \n"
               f"Your payment of {total_payment} has been refunded.")
         payment_successful = False
-        return payment_successful
+        return payment_successful, current_profit
     else:
         if total_payment > drink_price:
             change = total_payment - drink_price
             print(f"Here is ${change} dollars in change.")
         current_profit += drink_price
-        profit = current_profit
         payment_successful = True
-        return payment_successful
+        return payment_successful, current_profit
+
+
+def start_coffee_machine():
+    current_profit = profit
+
+    machine_on = True
+    while machine_on:
+        drink = input("What would you like? expresso/latte/cappuccino: ").lower()
+        if drink == "report":
+            print_report(resources, current_profit)
+        elif drink == "off":
+            print("Turning off...")
+            machine_on = False
+        else:
+            if check_resources(drink, resources):
+                payment_status, current_profit = payment(drink, current_profit)
+                if payment_status:
+                    make_coffee(drink, resources)
 
 
 start_coffee_machine()
